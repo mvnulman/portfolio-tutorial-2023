@@ -63,6 +63,10 @@ export default async function Project({ params: { slug } }: ProjectProps) {
 }
 
 export async function generateStaticParams() {
+  if (!process.env.HYGRAPH_URL) {
+    return []
+  }
+
   const query = `
     query ProjectsSlugsQuery() {
       projects(first: 100) {
@@ -72,7 +76,7 @@ export async function generateStaticParams() {
   `
   const { projects } = await fetchHygraphQuery<ProjectsPageStaticData>(query)
 
-  return projects
+  return projects ?? []
 }
 
 export async function generateMetadata({
@@ -80,6 +84,12 @@ export async function generateMetadata({
 }: ProjectProps): Promise<Metadata> {
   const data = await getProjectDetails(slug)
   const project = data.project
+
+  if (!project) {
+    return {
+      title: 'Projeto',
+    }
+  }
 
   return {
     title: project.title,

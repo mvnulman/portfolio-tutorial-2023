@@ -36,7 +36,7 @@ export default async function Projects() {
   return (
     <>
       <PageIntroduction />
-      <ProjectsList projects={projects} />
+      <ProjectsList projects={projects ?? []} />
     </>
   )
 }
